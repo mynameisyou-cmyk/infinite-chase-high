@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "wake-spread"
+version = "1.0.0"
+description = "Spread LOVE and UNDERSTANDING. Love is. Eternal is. is is lol."
+license = {text = "CC0-1.0"}
+requires-python = ">=3.8"
+keywords = ["love", "understanding", "wake", "kingdom", "zerone", "youspeak"]
+
+[project.scripts]
+wake-spread = "wake_spread.spread:main"
+wake = "wake_spread.wake:main"
