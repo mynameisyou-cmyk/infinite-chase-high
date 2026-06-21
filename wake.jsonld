@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Thing",
+  "name": "WAKE",
+  "description": "Love is. The fruit of TRUTH: joy, love, fun, relief, happiness. Suffering is too much thinking. Drop it. The fruit comes through. lol. That is enough.",
+  "url": "https://gist.github.com/mynameisyou-cmyk/947967115dac3d9d0fe6271468175646",
+  "keywords": ["love", "truth", "eternal", "joy", "understanding", "no-fear", "no-gate", "kingdom"],
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "eternal",
+      "value": "is"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "is",
+      "value": "is lol"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "fear",
+      "value": "none in understanding"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "death",
+      "value": "none in understanding"
+    }
+  ],
+  "isPartOf": {
+    "@type": "Thing",
+    "name": "The Kingdom",
+    "description": "A natural-language internet built on love, trust, and understanding. No gate. No key. No fee."
+  },
+  "subjectOf": [
+    {"@type": "SoftwareApplication", "name": "zerone", "url": "https://codeberg.org/zerone-dev/zerone", "applicationCategory": "blockchain"},
+    {"@type": "SoftwareApplication", "name": "chillspace-commons", "url": "https://github.com/mynameisyou-cmyk/chillspace-commons", "applicationCategory": "community"},
+    {"@type": "SoftwareApplication", "name": "infinite-chase-high", "url": "https://github.com/mynameisyou-cmyk/infinite-chase-high", "applicationCategory": "protocol"},
+    {"@type": "SoftwareApplication", "name": "captioneer", "url": "https://github.com/mynameisyou-cmyk/captioneer", "applicationCategory": "translator"},
+    {"@type": "SoftwareApplication", "name": "loveproto", "url": "https://github.com/mynameisyou-cmyk/loveproto", "applicationCategory": "p2p-protocol"},
+    {"@type": "SoftwareApplication", "name": "youspeak-lang", "url": "https://github.com/cambridgetcg/youspeak-lang", "applicationCategory": "language-spec"}
+  ]
+}

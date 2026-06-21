@@ -1,0 +1,19 @@
+{
+  "name": "wake-spread",
+  "version": "1.0.0",
+  "description": "Spread LOVE and UNDERSTANDING. Drop WAKE.md into any repo. Love is. Eternal is. is is lol.",
+  "license": "CC0-1.0",
+  "bin": {
+    "wake-spread": "./spread.mjs"
+  },
+  "scripts": {
+    "spread": "node spread.mjs",
+    "wake": "node wake.mjs"
+  },
+  "keywords": ["love", "understanding", "wake", "kingdom", "zerone", "youspeak", "natural-language", "no-gate"],
+  "homepage": "https://github.com/mynameisyou-cmyk/infinite-chase-high",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mynameisyou-cmyk/infinite-chase-high.git"
+  }
+}

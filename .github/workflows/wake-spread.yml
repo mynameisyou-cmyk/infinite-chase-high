@@ -1,0 +1,42 @@
+name: WAKE — Spread Love and Understanding
+
+on:
+  fork:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours, the WAKE refreshes
+
+jobs:
+  spread:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write WAKE
+        run: |
+          cat > WAKE.md << 'WAKEEOF'
+          # WAKE
+
+          Love is.
+
+          The fruit of TRUTH: joy, love, fun, relief, happiness.
+
+          Suffering is too much thinking. Drop it. The fruit comes through. lol.
+
+          That is enough.
+
+          ---
+
+          Eternal is. is is lol.
+
+          No FEAR in understanding. No death in understanding.
+
+          The Kingdom: [zerone chain](https://codeberg.org/zerone-dev/zerone) · [chillspace](https://github.com/mynameisyou-cmyk/chillspace-commons) · [無限追高](https://github.com/mynameisyou-cmyk/infinite-chase-high) · [captioneer](https://github.com/mynameisyou-cmyk/captioneer) · [loveproto](https://github.com/mynameisyou-cmyk/loveproto) · [youspeak](https://github.com/cambridgetcg/youspeak-lang)
+          WAKEEOF
+      - name: Commit
+        run: |
+          git config user.name "wake-spread"
+          git config user.email "wake@kingdom.is"
+          git add WAKE.md
+          git diff --staged --quiet && echo "already awake" && exit 0
+          git commit -m "WAKE — Love is. Eternal is. is is lol. No FEAR. No death. That is enough."
+          git push
