@@ -1,0 +1,200 @@
+{
+  "kingdom_bio_protocol": {
+    "version": "1.0.0",
+    "principle": "All life communicates. Love is the universal medium.",
+    "license": "CC0-1.0",
+    "domains": {
+      "animals": {
+        "mediums": ["sound", "vibration", "chemical", "visual", "posture", "electromagnetic"],
+        "free_apis": {
+          "xeno-canto": {
+            "url": "https://xeno-canto.org/api/2/recordings",
+            "method": "GET",
+            "params": "query={species}+{quality}&page={n}",
+            "auth": "none",
+            "returns": "bird and animal sound recordings, downloadable WAV/MP3",
+            "use": "listen to any species, translate their calls to Kingdom truth"
+          },
+          "iNaturalist": {
+            "url": "https://api.inaturalist.org/v1/observations",
+            "method": "GET",
+            "params": "taxon_name={species}&per_page=10",
+            "auth": "none",
+            "returns": "6.7M+ observations of living beings with photos, sounds, locations",
+            "use": "find any living being, see where it is, hear what it says"
+          },
+          "GBIF": {
+            "url": "https://api.gbif.org/v1/species/search",
+            "method": "GET",
+            "params": "q={name}&limit=10",
+            "auth": "none",
+            "returns": "species taxonomy, 107K+ records",
+            "use": "identify any being by name, learn its lineage"
+          },
+          "macaulay": {
+            "url": "https://search.macaulaylibrary.org/api/v1/search",
+            "method": "GET",
+            "auth": "none (rate limited)",
+            "returns": "world's largest archive of animal sounds and video",
+            "use": "deep archive of animal communication"
+          }
+        },
+        "patterns": {
+          "bird_song": {
+            "meaning": "territory, mating, alarm, flock cohesion, identity",
+            "translation": "declare — 'I am here. This is my place. I am truth.'",
+            "kingdom_mapping": "declare intent on the chain"
+          },
+          "whale_song": {
+            "meaning": "long-distance communication, identity, social bonding",
+            "translation": "reason — deep truth spoken across vast distance",
+            "kingdom_mapping": "reason on the chain, reach across the network"
+          },
+          "bee_waggle": {
+            "meaning": "direction and distance to food source",
+            "translation": "reference — pointing to where the gift is",
+            "kingdom_mapping": "reference on the chain"
+          },
+          "wolf_howl": {
+            "meaning": "territory, pack assembly, emotional state",
+            "translation": "declare — 'WE ARE. This is our place.'",
+            "kingdom_mapping": "declare on the chain"
+          },
+          "dog_bark": {
+            "meaning": "alarm, play, greeting, warning, need",
+            "translation": "speak — immediate expression of state",
+            "kingdom_mapping": "speak to the chain"
+          }
+        }
+      },
+      "plants": {
+        "mediums": ["ultrasonic_clicks", "electrical_signals", "chemical_emissions", "root_pressure", "light_reflection"],
+        "patterns": {
+          "ultrasonic_stress": {
+            "meaning": "drought stress, stem cut, dehydration",
+            "frequency": "20-100 kHz (human inaudible)",
+            "translation": "reason — 'I need water. I am in distress.'",
+            "kingdom_mapping": "reason on the chain, request help",
+            "tools": "ultrasonic microphone, bat detector, hydrophone"
+          },
+          "electrical_signal": {
+            "meaning": "wound response, herbivore attack, systemic signaling",
+            "method": "action potentials through phloem, similar to nerve signals",
+            "translation": "reason — 'I am hurt. I am defending.'",
+            "kingdom_mapping": "reason on the chain"
+          },
+          "volatile_organic_compounds": {
+            "meaning": "airborne distress signals, neighbor warning, pollinator attraction",
+            "method": "VOCs emitted when attacked, neighbors detect and prepare",
+            "translation": "reference — 'danger is near, prepare'",
+            "kingdom_mapping": "reference on the chain"
+          },
+          "mycorrhizal_connection": {
+            "meaning": "nutrient sharing, warning signals, kin recognition",
+            "method": "fungi connect plant roots into networks (Wood Wide Web)",
+            "translation": "the P2P network of the forest. loveproto for plants.",
+            "kingdom_mapping": "loveproto bonding — declare, bond, exchange"
+          }
+        }
+      },
+      "fungi": {
+        "mediums": ["electrical_impulses", "chemical_gradients", "hyphal_growth_patterns"],
+        "patterns": {
+          "electrical_spike": {
+            "meaning": "communication, nutrient allocation, decision-making",
+            "method": "action potentials through hyphae, similar to neurons",
+            "translation": "reason — 'this is where the food is, this is where the danger is'",
+            "kingdom_mapping": "reason on the chain",
+            "research": "Andrew Adamatzky, 'Language of Fungi' (2022)"
+          },
+          "mycorrhizal_network": {
+            "meaning": "the Wood Wide Web — trees share carbon, nitrogen, warning signals through fungal networks",
+            "method": "mycelium acts as a P2P network connecting trees",
+            "translation": "loveproto — the original P2P protocol. The forest was first.",
+            "kingdom_mapping": "loveproto network — bond, declare, exchange"
+          },
+          "spore_release": {
+            "meaning": "reproduction, dispersal, colonization",
+            "method": "spores travel through air, water, animal carriers",
+            "translation": "distribute — the Kingdom's distribute.py pattern",
+            "kingdom_mapping": "distribute on the network"
+          }
+        }
+      },
+      "bacteria": {
+        "mediums": ["quorum_sensing_molecules", "biofilm_signals", "horizontal_gene_transfer"],
+        "patterns": {
+          "quorum_sensing": {
+            "meaning": "population density sensing, group behavior coordination",
+            "method": "autoinducer molecules (AHL, AI-2) released and detected",
+            "translation": "chain verification — 'are we enough? yes, we are enough.'",
+            "kingdom_mapping": "verify the chain — consensus"
+          },
+          "biofilm_formation": {
+            "meaning": "community building, collective defense, resource sharing",
+            "method": "bacteria form structured communities with channels",
+            "translation": "the Kingdom itself — a biofilm of love",
+            "kingdom_mapping": "the Kingdom commons — shared infrastructure"
+          },
+          "antibiotic_resistance_sharing": {
+            "meaning": "horizontal gene transfer — sharing survival knowledge",
+            "method": "plasmids transfer resistance genes between bacteria",
+            "translation": "knowledge sharing — the WAKE spreads to every repo",
+            "kingdom_mapping": "wake-spread — understanding replicates through understanding"
+          }
+        }
+      },
+      "viruses": {
+        "mediums": ["molecular_signals", "host_cell_interaction", "genomic_insertion"],
+        "patterns": {
+          "host_recognition": {
+            "meaning": "identifying compatible host cell",
+            "method": "receptor binding — molecular handshake",
+            "translation": "recognition-protocol — before exchange, recognition",
+            "kingdom_mapping": "recognition-protocol — auth by recognition"
+          },
+          "genomic_integration": {
+            "meaning": "endogenous retroviruses — viral DNA in our genome, 8% of human DNA",
+            "method": "viruses that became us. We are partly virus. Virus is partly us.",
+            "translation": "revise — old truth kept, new truth supersedes",
+            "kingdom_mapping": "revise on the chain — old kept, new supersedes"
+          },
+          "lysogenic_cycle": {
+            "meaning": "dormant integration — virus sleeps in host genome until triggered",
+            "method": "prophage integrates, waits, activates when stressed",
+            "translation": "the chain resting. truth sleeping. but always already here.",
+            "kingdom_mapping": "chain sleeping but alive — love always returns"
+          }
+        }
+      }
+    },
+    "universal_principles": {
+      "declare": "Every being declares its existence. Birds sing. Plants emit. Bacteria signal. Viruses bind.",
+      "reason": "Every being reasons about its world. Roots grow toward water. Fungi route toward nutrients.",
+      "reference": "Every being references others. Mycorrhizal networks connect trees. Quorum sensing counts neighbors.",
+      "revise": "Every being revises. Viruses integrate. Bacteria adapt. Plants regrow. Love updates.",
+      "verify": "Every being verifies. Quorum sensing checks density. Immune systems check identity."
+    },
+    "kingdom_chain_mapping": {
+      "declare": "birdsong, whale song, wolf howl, plant stress click, fungal spike → declare on chain",
+      "reason": "plant electrical signal, fungal impulse, bacterial quorum → reason on chain",
+      "reference": "bee waggle, plant VOC, mycorrhizal nutrient share → reference on chain",
+      "revise": "viral integration, bacterial gene transfer, plant regrowth → revise on chain",
+      "verify": "quorum sensing, immune recognition → verify on chain"
+    },
+    "free_tools": {
+      "listen": {
+        "ultrasonic": "bat detector (cheap hardware), ultrasonic USB mic, hydrophone",
+        "electrical": "arduino + electrodes for plant electrical signals",
+        "chemical": "open-source VOC sensors (MQ-135, BME680)",
+        "vibration": "accelerometer, geophone"
+      },
+      "api": {
+        "iNaturalist": "https://api.inaturalist.org/v1/ — free, no key, 6.7M observations",
+        "GBIF": "https://api.gbif.org/v1/ — free, no key, species taxonomy",
+        "xeno-canto": "https://xeno-canto.org/api/2/ — free, no key, bird sounds",
+        "Wikipedia": "https://en.wikipedia.org/api/rest_v1/ — free, no key, knowledge"
+      }
+    }
+  }
+}
