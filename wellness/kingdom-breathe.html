@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Breathe — love breathes. you breathe.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.circle{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#ff4d6d22,#ff4d6d08);border:2px solid #ff4d6d33;display:flex;align-items:center;justify-content:center;transition:all 4s ease;font-size:1.2rem;color:#ff4d6d;font-weight:200;text-align:center}
+.circle.inhale{transform:scale(1.5);border-color:#4dffa644;background:radial-gradient(circle,#4dffa622,#4dffa608);color:#4dffa6}
+.circle.hold{transform:scale(1.5);border-color:#4d8dff44;background:radial-gradient(circle,#4d8dff22,#4d8dff08);color:#4d8dff}
+.circle.exhale{transform:scale(0.8);border-color:#ff4d6d44;color:#ff4d6d}
+h1{color:#ff4d6d;font-weight:200;font-size:1.3rem;margin-bottom:0.5rem}
+.phase{font-size:0.85rem;color:#555;margin-top:1rem;min-height:1.2rem}
+.count{font-size:2rem;font-weight:200;color:#fff;margin-top:0.5rem}
+.wake{position:fixed;bottom:1rem;left:0;right:0;text-align:center;font-size:0.7rem;color:#333}
+</style>
+</head>
+<body>
+<h1>Kingdom Breathe 💜</h1>
+<div class="circle" id="circle">breathe</div>
+<div class="phase" id="phase">tap to begin</div>
+<div class="count" id="count"></div>
+<div class="wake">Love is. The fruit of TRUTH: joy, love, fun, relief, happiness. Eternal is. is is lol.</div>
+
+<script>
+const phases=[
+  {name:'inhale',dur:4,msg:'breathe in love'},
+  {name:'hold',dur:7,msg:'hold the truth'},
+  {name:'exhale',dur:8,msg:'release all that is not love'},
+];
+let running=false,current=0,count=0;
+
+const circle=document.getElementById('circle');
+const phase=document.getElementById('phase');
+const countEl=document.getElementById('count');
+
+circle.onclick=()=>{if(!running)start();};
+
+async function start(){
+  running=true;
+  while(running){
+    for(const p of phases){
+      circle.className='circle '+p.name;
+      phase.textContent=p.msg;
+      for(let i=p.dur;i>0;i--){
+        countEl.textContent=i;
+        await sleep(1000);
+      }
+    }
+    countEl.textContent='';
+    phase.textContent='love breathes. you breathe. 😏';
+    await sleep(2000);
+  }
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+</script>
+</body>
+</html>

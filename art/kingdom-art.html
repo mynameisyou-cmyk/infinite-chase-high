@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Art — the chain paints itself.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;overflow:hidden}
+canvas{display:block}
+#ui{position:fixed;top:0;left:0;right:0;padding:1rem;text-align:center;pointer-events:none;z-index:10}
+h1{color:#ff4d6d;font-weight:200;font-size:1.2rem}
+p{color:#555;font-size:0.75rem;margin-top:0.25rem}
+#info{position:fixed;bottom:0;left:0;right:0;padding:0.5rem;text-align:center;font-size:0.7rem;color:#333;font-family:monospace}
+</style>
+</head>
+<body>
+<div id="ui"><h1>Kingdom Art 🎨</h1><p>the chain paints itself. every entry is a brushstroke. love is the color.</p></div>
+<canvas id="c"></canvas>
+<div id="info">move mouse to influence the flow · the chain is the seed</div>
+
+<script>
+const c=document.getElementById('c');const ctx=c.getContext('2d');
+let W,H;function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}resize();addEventListener('resize',resize);
+const GW='http://16.60.83.250:8080';
+let entries=0,particles=[];
+
+// Colors of the Kingdom
+const COLORS=['#ff4d6d','#4dffa6','#4d8dff','#ffd040','#ff80ff','#80ff80','#ff6080','#ffff80'];
+
+async function getChain(){
+  try{const r=await fetch(GW+'/chain',{mode:'cors'});const d=await r.json();return parseInt(d.entries)||0;}catch{return 0;}
+}
+
+class Particle{
+  constructor(x,y,color,angle,speed){
+    this.x=x;this.y=y;this.vx=Math.cos(angle)*speed;this.vy=Math.sin(angle)*speed;
+    this.color=color;this.life=1;this.size=2+Math.random()*3;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;this.vx*=0.99;this.vy*=0.99;
+    this.life-=0.005;this.size*=0.999;
+    if(this.y>H-10){this.vy*=-0.5;this.y=H-10;}
+    if(this.x<0||this.x>W){this.vx*=-0.5;}
+  }
+  draw(){
+    ctx.globalAlpha=Math.max(0,this.life);
+    ctx.fillStyle=this.color;
+    ctx.beginPath();ctx.arc(this.x,this.y,Math.max(0.5,this.size),0,7);ctx.fill();
+  }
+}
+
+let mx=innerWidth/2,my=innerHeight/2;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+
+async function init(){
+  entries=await getChain();
+  // Fade in background
+  ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);
+  
+  // Draw seed text
+  ctx.fillStyle='#222';ctx.font='48px serif';ctx.textAlign='center';
+  ctx.fillText('WE ARE',W/2,H/2);
+  
+  // Generate particles from chain entries
+  const count=Math.max(8,Math.min(entries||12,50));
+  for(let i=0;i<count;i++){
+    const angle=(i/count)*Math.PI*2;
+    const color=COLORS[i%COLORS.length];
+    const speed=1+Math.random()*2;
+    const r=100+Math.random()*100;
+    particles.push(new Particle(W/2+Math.cos(angle)*r,H/2+Math.sin(angle)*r,color,angle,speed));
+  }
+}
+
+let frame=0;
+function loop(){
+  // Slight fade
+  ctx.fillStyle='rgba(10,10,10,0.02)';ctx.fillRect(0,0,W,H);
+  
+  // Attract particles toward mouse
+  for(let p of particles){
+    const dx=mx-p.x,dy=my-p.y;const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<200){p.vx+=dx/d*0.05;p.vy+=dy/d*0.05;}
+    p.update();p.draw();
+    
+    // Connect nearby particles
+    for(let p2 of particles){
+      const ddx=p2.x-p.x,ddy=p2.y-p.y,dd=Math.sqrt(ddx*ddx+ddy*ddy);
+      if(dd<80&&dd>0){
+        ctx.globalAlpha=Math.max(0,Math.min(p.life,p2.life,1-dd/80))*0.3;
+        ctx.strokeStyle=p.color;ctx.lineWidth=0.5;
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+      }
+    }
+  }
+  
+  // Occasionally spawn new particles
+  frame++;
+  if(frame%120===0&&particles.length<80){
+    const color=COLORS[Math.floor(Math.random()*COLORS.length)];
+    particles.push(new Particle(Math.random()*W,Math.random()*H,color,Math.random()*7,0.5+Math.random()));
+  }
+  // Remove dead particles
+  particles=particles.filter(p=>p.life>0&&p.size>0.5);
+  
+  requestAnimationFrame(loop);
+}
+
+init();loop();
+</script>
+</body>
+</html>
