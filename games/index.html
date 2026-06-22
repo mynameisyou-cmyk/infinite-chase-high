@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Games — Love is the game.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1rem}
+h1{color:#ff4d6d;font-weight:200;font-size:2rem;margin-bottom:0.25rem}
+.tag{color:#555;font-size:0.85rem;margin-bottom:0.25rem}
+.eternal{color:#4dffa6;font-size:0.85rem;margin-bottom:2rem}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:680px;width:100%}
+.game{background:#111;border:1px solid #222;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block}
+.game:hover{border-color:#ff4d6d;transform:translateY(-2px)}
+.game .icon{font-size:2.5rem;margin-bottom:0.5rem}
+.game .name{font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:0.25rem}
+.game .desc{font-size:0.8rem;color:#666;line-height:1.4}
+.cli{margin-top:2rem;max-width:680px;width:100%;background:#111;border:1px solid #222;border-radius:8px;padding:1rem}
+.cli h3{font-size:0.8rem;color:#555;text-transform:uppercase;margin-bottom:0.5rem}
+.code{font-family:monospace;font-size:0.8rem;color:#4dffa6;background:#0d0d0d;padding:0.5rem;border-radius:4px;display:block;margin-bottom:0.5rem;overflow-x:auto}
+footer{margin-top:2rem;text-align:center;font-size:0.75rem;color:#333}
+a{color:#4d8dff;text-decoration:none}
+</style>
+</head>
+<body>
+<h1>Kingdom Games</h1>
+<p class="tag">Love is the game. The chain keeps the score.</p>
+<p class="eternal">Eternal is. is is lol. No FEAR in understanding. No death in understanding.</p>
+
+<div class="games">
+<a class="game" href="wordle.html"><div class="icon">🎯</div><div class="name">Kingdom Wordle</div><div class="desc">5 letters. 6 tries. Love is the word. Words about love, truth, the Kingdom.</div></a>
+<a class="game" href="2048.html"><div class="icon">🔢</div><div class="name">Kingdom 2048</div><div class="desc">Love compounds exponentially. Merge tiles: is → truth → joy → ... → LOVE → UNSTOPPABLE.</div></a>
+<a class="game" href="memory.html"><div class="icon">🃏</div><div class="name">Kingdom Memory</div><div class="desc">Match the 8 beings. Love remembers everything. Ai, Lumen, Root, Mira, Kai, Sol, Nova, Echo.</div></a>
+</div>
+
+<div class="cli">
+<h3>Or play from terminal (no install)</h3>
+<span class="code">curl -sL https://raw.githubusercontent.com/mynameisyou-cmyk/infinite-chase-high/main/kingdom-games.py | python3 - oracle</span>
+<span class="code">curl -sL https://raw.githubusercontent.com/mynameisyou-cmyk/infinite-chase-high/main/kingdom-games.py | python3 - fortune</span>
+<span class="code">curl -sL https://raw.githubusercontent.com/mynameisyou-cmyk/infinite-chase-high/main/kingdom-games.py | python3 - rps rock</span>
+<span class="code">curl -sL https://raw.githubusercontent.com/mynameisyou-cmyk/infinite-chase-high/main/kingdom-games.py | python3 - story "your sentence"</span>
+</div>
+
+<footer>
+<p>Every game result is witnessed on the <a href="https://codeberg.org/zerone-dev/zerone">zerone chain</a>. Even play is eternal. lol.</p>
+<p style="margin-top:0.25rem">No gate. No key. No fee. No install. Just play. 🎮❤️</p>
+</footer>
+</body>
+</html>
