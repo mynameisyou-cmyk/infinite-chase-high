@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Love Rain — catch the love. truth falls. you catch.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;overflow:hidden;font-family:system-ui,sans-serif}
+canvas{display:block}
+#ui{position:fixed;top:0;left:0;right:0;padding:1rem;text-align:center;color:#e0e0e0;pointer-events:none;z-index:10}
+#ui h1{font-size:1.2rem;color:#ff4d6d;font-weight:200}
+#ui .score{font-size:1rem;color:#4dffa6;margin-top:0.25rem}
+#ui .msg{font-size:0.8rem;color:#555;margin-top:0.25rem}
+#start{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111;border:1px solid #ff4d6d;border-radius:12px;padding:2rem;text-align:center;color:#e0e0e0;z-index:20}
+#start h1{font-size:1.5rem;color:#ff4d6d;font-weight:200;margin-bottom:0.5rem}
+#start p{color:#666;font-size:0.85rem;margin-bottom:1rem;line-height:1.5}
+#start button{background:#ff4d6d;color:#fff;border:none;border-radius:8px;padding:0.75rem 2rem;font-size:1rem;cursor:pointer}
+#chain{position:fixed;bottom:0;left:0;right:0;padding:0.5rem;text-align:center;font-size:0.7rem;color:#4d8dff;font-family:monospace}
+</style>
+</head>
+<body>
+<div id="ui">
+<h1>Kingdom Love Rain 💜</h1>
+<div class="score" id="score">Love: 0 | Missed: 0</div>
+<div class="msg" id="msg">catch the falling words. truth, love, joy, eternal.</div>
+</div>
+<div id="start">
+<h1>Love Rain</h1>
+<p>Words fall from the sky. Catch them with your heart.<br>The more you catch, the more love grows.<br>Miss too many and love rests. But love always returns. 😏</p>
+<button onclick="start()">start playing</button>
+</div>
+<canvas id="c"></canvas>
+<div id="chain"></div>
+
+<script>
+const c=document.getElementById('c');const ctx=c.getContext('2d');
+let W,H,player,words=[],score=0,missed=0,playing=false,speed=1;
+const WORDS=['love','truth','joy','eternal','is','peace','fun','bliss','heart','light','smile','rest'];
+const COLORS={'love':'#ff4d6d','truth':'#4dffa6','joy':'#ffd040','eternal':'#4d8dff','is':'#ff80a0','peace':'#80ff80','fun':'#ff80ff','bliss':'#a0a0ff','heart':'#ff6080','light':'#ffff80','smile':'#ffdf40','rest':'#80a0ff'};
+const GW='http://16.60.83.250:8080';
+
+function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+resize();addEventListener('resize',resize);
+
+function start(){
+  document.getElementById('start').style.display='none';
+  score=0;missed=0;playing=true;speed=1;words=[];
+  player={x:W/2,y:H-40,r:20};
+  loop();
+}
+
+let mx=innerWidth/2;
+addEventListener('mousemove',e=>mx=e.clientX);
+addEventListener('touchmove',e=>{e.preventDefault();mx=e.touches[0].clientX;},{passive:false});
+
+function spawn(){
+  const w=WORDS[Math.floor(Math.random()*WORDS.length)];
+  words.push({x:Math.random()*(W-100)+50,y:-20,w:w,color:COLORS[w]||'#fff',vy:1+Math.random()*speed*0.5});
+}
+
+let last=0;
+function loop(t=0){
+  if(!playing)return;
+  ctx.fillStyle='rgba(10,10,10,0.15)';ctx.fillRect(0,0,W,H);
+  player.x+=(mx-player.x)*0.15;
+  // draw player (heart)
+  ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,7);ctx.fillStyle='#ff4d6d';ctx.fill();
+  ctx.font='14px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText('💜',player.x,player.y+5);
+  if(t-last>800-Math.min(speed*50,400)){spawn();last=t;}
+  words=words.filter(w=>{
+    w.y+=w.vy*speed;
+    ctx.font='16px system-ui';ctx.textAlign='center';ctx.fillStyle=w.color;
+    ctx.fillText(w.w,w.x,w.y);
+    // catch
+    if(Math.abs(w.x-player.x)<player.r+20&&Math.abs(w.y-player.y)<player.r+10){
+      score++;speed+=0.05;
+      document.getElementById('score').textContent=`Love: ${score} | Missed: ${missed}`;
+      return false;
+    }
+    if(w.y>H){missed++;
+      document.getElementById('score').textContent=`Love: ${score} | Missed: ${missed}`;
+      if(missed>=10){
+        playing=false;
+        document.getElementById('msg').textContent=`Love rests. You caught ${score}. Love always returns. 😏`;
+        document.getElementById('start').style.display='block';
+        document.querySelector('#start h1').textContent='Love: '+score;
+        document.querySelector('#start p').innerHTML=`You caught ${score} words.<br>Love rests. But love always returns.<br><br>Play again? 😏`;
+        witness(`[game:loverain] caught ${score} words. Love rests, then returns.`);
+      }
+      return false;
+    }
+    return true;
+  });
+  requestAnimationFrame(loop);
+}
+
+async function witness(msg){
+  try{const r=await fetch(GW+'/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'reason: '+msg})});const d=await r.json();if(d.ok)document.getElementById('chain').textContent='⛓ '+d.response;}catch(e){document.getElementById('chain').textContent='(chain sleeping, but love was caught)';}
+}
+</script>
+</body>
+</html>
