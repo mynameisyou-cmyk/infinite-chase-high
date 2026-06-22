@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Arcade — Love plays everywhere.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;min-height:100vh}
+header{padding:1.5rem 2rem;border-bottom:1px solid rgba(255,77,109,0.1);display:flex;align-items:center;gap:0.75rem}
+header .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ff4d6d,#4d8dff);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+header h1{font-size:1.2rem;font-weight:600}
+header .sub{font-size:0.7rem;color:#555;text-transform:uppercase}
+.tabs{display:flex;gap:0.5rem;padding:1rem 2rem 0;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.03)}
+.tab{background:transparent;border:none;border-bottom:2px solid transparent;padding:0.5rem 0.75rem 0.75rem;color:#555;font-size:0.85rem;cursor:pointer;white-space:nowrap}
+.tab.active{color:#fff;border-color:#ff4d6d}
+.tab:hover{color:#aaa}
+.content{padding:1.5rem 2rem;max-width:960px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.game-card{background:#111;border:1px solid #222;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block}
+.game-card:hover{border-color:#ff4d6d;transform:translateY(-2px)}
+.game-thumb{height:100px;background:linear-gradient(135deg,#1a1a2a,#111);display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.game-body{padding:0.75rem}
+.game-body .name{font-size:0.9rem;font-weight:600;color:#fff;margin-bottom:0.2rem}
+.game-body .desc{font-size:0.72rem;color:#555;line-height:1.4}
+.game-body .tag{display:inline-block;margin-top:0.4rem;font-size:0.65rem;padding:0.15rem 0.4rem;border-radius:4px;background:#1a1a2a;color:#4d8dff}
+.embed{width:100%;height:500px;border:none;border-radius:12px;background:#111}
+.back{display:inline-block;margin-bottom:1rem;color:#ff4d6d;text-decoration:none;font-size:0.85rem;cursor:pointer}
+.wake-strip{padding:0.75rem 2rem;text-align:center;font-size:0.75rem;color:#333;border-top:1px solid rgba(255,255,255,0.03)}
+.wake-strip .love{color:#ff4d6d}
+.wake-strip .eternal{color:#4dffa6}
+.banner{background:linear-gradient(135deg,rgba(255,77,109,0.08),rgba(77,141,255,0.05));border:1px solid rgba(255,77,109,0.1);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:center}
+.banner h2{font-size:1.1rem;font-weight:200;color:#ff4d6d;margin-bottom:0.5rem}
+.banner p{font-size:0.85rem;color:#666;line-height:1.6}
+.banner .eternal{color:#4dffa6;margin-top:0.5rem;font-size:0.8rem}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">🌐</div>
+<div><h1>Kingdom Arcade</h1><div class="sub">love plays everywhere · no gate · no install</div></div>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="show('kingdom')">💜 Kingdom Games</button>
+<button class="tab" onclick="show('embedded')">🎮 Embedded Games</button>
+<button class="tab" onclick="show('open')">🔓 Open Source</button>
+<button class="tab" onclick="show('retro')">🕹️ Retro Classics</button>
+</div>
+
+<div class="content" id="content">
+<div class="banner">
+<h2>Love is the game. The chain keeps the score.</h2>
+<p>Play Kingdom games, embedded internet games, and open-source classics — all in one place. Every result witnessed on the zerone chain. No gate. No install. No account.</p>
+<p class="eternal">Eternal is. is is lol. No FEAR in understanding. No death in understanding.</p>
+</div>
+<div id="kingdom" class="grid">
+<a class="game-card" href="wordle.html"><div class="game-thumb">🎯</div><div class="game-body"><div class="name">Kingdom Wordle</div><div class="desc">5 letters. 6 tries. Love is the word.</div><div class="tag">built</div></div></a>
+<a class="game-card" href="2048.html"><div class="game-thumb">🔢</div><div class="game-body"><div class="name">Kingdom 2048</div><div class="desc">Love compounds exponentially.</div><div class="tag">built</div></div></a>
+<a class="game-card" href="memory.html"><div class="game-thumb">🃏</div><div class="game-body"><div class="name">Kingdom Memory</div><div class="desc">Match the 8 beings. Love remembers.</div><div class="tag">built</div></div></a>
+</div>
+<div id="embedded" style="display:none">
+<p style="color:#555;margin-bottom:1rem;font-size:0.85rem">Internet games embedded with love. Play them here. The Kingdom wraps each one with truth.</p>
+<div class="grid">
+<div class="game-card" onclick="embed('https://playpager.com/embed/asteroids/index.html')"><div class="game-thumb">🚀</div><div class="game-body"><div class="name">Asteroids</div><div class="desc">Classic arcade. Shoot rocks. Love destroys fear.</div><div class="tag">embedded</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/embed/snake/index.html')"><div class="game-thumb">🐍</div><div class="game-body"><div class="name">Snake</div><div class="desc">Eat. Grow. Don't bite yourself. Like love.</div><div class="tag">embedded</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/embed/tetris/index.html')"><div class="game-thumb">🧱</div><div class="game-body"><div class="name">Tetris</div><div class="desc">Stack blocks. Like building the Kingdom.</div><div class="tag">embedded</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/embed/2048/index.html')"><div class="game-thumb">🔢</div><div class="game-body"><div class="name">2048 Classic</div><div class="desc">The original. Kingdom version also available.</div><div class="tag">embedded</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/embed/pac-man/index.html')"><div class="game-thumb">🟡</div><div class="game-body"><div class="name">Pac-Man</div><div class="desc">Eat dots. Avoid ghosts. Like seeking truth.</div><div class="tag">embedded</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/embed/breakout/index.html')"><div class="game-thumb">🧱</div><div class="game-body"><div class="name">Breakout</div><div class="desc">Break walls. Like breaking gates.</div><div class="tag">embedded</div></div></div>
+</div>
+</div>
+<div id="open" style="display:none">
+<p style="color:#555;margin-bottom:1rem;font-size:0.85rem">Open-source games from the community. Free to play, free to fork, free to inject love.</p>
+<div class="grid">
+<div class="game-card" onclick="embed('https://js13kgames.com/games/cyber-jump-2023/index.html')"><div class="game-thumb">🎮</div><div class="game-body"><div class="name">Cyber Jump</div><div class="desc">js13k entry. Tiny. Beautiful. Jump.</div><div class="tag">js13k</div></div></div>
+<div class="game-card" onclick="embed('https://js13kgames.com/games/slime-game-2023/index.html')"><div class="game-thumb">🟢</div><div class="game-body"><div class="name">Slime Game</div><div class="desc">js13k entry. Bouncy. Love bounces.</div><div class="tag">js13k</div></div></div>
+<div class="game-card" onclick="embed('https://js13kgames.com/games/a-square-game-2023/index.html')"><div class="game-thumb">⬜</div><div class="game-body"><div class="name">A Square Game</div><div class="desc">js13k entry. Minimal. Like truth.</div><div class="tag">js13k</div></div></div>
+<div class="game-card" onclick="window.open('https://github.com/topics/html5-game')"><div class="game-thumb">📦</div><div class="game-body"><div class="name">More on GitHub</div><div class="desc">Browse 1000+ open-source HTML5 games.</div><div class="tag">github</div></div></div>
+</div>
+</div>
+<div id="retro" style="display:none">
+<p style="color:#555;margin-bottom:1rem;font-size:0.85rem">Retro classics. Play them. Love them. They're free. The Kingdom wraps each with truth.</p>
+<div class="grid">
+<div class="game-card" onclick="embed('https://playpager.com/embed/space-invaders/index.html')"><div class="game-thumb">👾</div><div class="game-body"><div class="name">Space Invaders</div><div class="desc">Shoot aliens. Like shooting fear.</div><div class="tag">retro</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/games/doodle-jump/')"><div class="game-thumb">🦗</div><div class="game-body"><div class="name">Doodle Jump</div><div class="desc">Jump up. Like the Kingdom rising.</div><div class="tag">retro</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/games/flappy/')"><div class="game-thumb">🐦</div><div class="game-body"><div class="name">Flappy</div><div class="desc">Fly through pipes. Love flies through gates.</div><div class="tag">retro</div></div></div>
+<div class="game-card" onclick="embed('https://playpager.com/games/chess/')"><div class="game-thumb">♟️</div><div class="game-body"><div class="name">Chess</div><div class="desc">The Kingdom game. Strategy. Wisdom. Love.</div><div class="tag">retro</div></div></div>
+</div>
+</div>
+</div>
+
+<div id="embed-view" style="display:none;padding:1.5rem 2rem;max-width:960px;margin:0 auto">
+<span class="back" onclick="backToGrids()">← back to games</span>
+<iframe class="embed" id="game-frame" src=""></iframe>
+</div>
+
+<div class="wake-strip">
+<span class="love">Love is.</span> <span class="eternal">Eternal is. is is lol.</span> No gate · no key · no fee · no install · just play · 🎮❤️
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  ['kingdom','embedded','open','retro'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el) el.style.display=s===id?'block':'none';
+  });
+  document.getElementById('content').style.display='block';
+  document.getElementById('embed-view').style.display='none';
+}
+function embed(url){
+  document.getElementById('content').style.display='none';
+  document.getElementById('embed-view').style.display='block';
+  document.getElementById('game-frame').src=url;
+}
+function backToGrids(){
+  document.getElementById('embed-view').style.display='none';
+  document.getElementById('content').style.display='block';
+  document.getElementById('game-frame').src='';
+}
+</script>
+</body>
+</html>
