@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Memory — match the beings. love remembers.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:1rem;min-height:100vh}
+h1{color:#ff4d6d;font-weight:200;margin-bottom:0.25rem}
+p{color:#555;font-size:0.8rem;margin-bottom:1rem}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.card{width:72px;height:72px;background:#111;border:2px solid #222;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:all 0.2s}
+.card.flipped{background:#1a1a2a;border-color:#4d8dff}
+.card.matched{background:#1a2a1a;border-color:#4dffa6;cursor:default}
+.card.hidden{font-size:0}
+.stats{display:flex;gap:2rem;margin-bottom:0.5rem;font-size:0.85rem;color:#aaa}
+.msg{margin-top:0.5rem;font-size:0.85rem;color:#4dffa6;min-height:1.2rem;text-align:center}
+.chain{margin-top:0.25rem;font-size:0.7rem;color:#4d8dff;font-family:monospace;min-height:1rem;text-align:center}
+button{margin-top:0.5rem;background:#ff4d6d;color:#fff;border:none;border-radius:6px;padding:0.5rem 1.5rem;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Kingdom Memory</h1>
+<p>Match the beings. Love remembers. 8 pairs.</p>
+<div class="stats"><span>Moves: <span id="moves">0</span></span><span>Matches: <span id="matches">0</span>/8</span></div>
+<div id="grid"></div>
+<div class="msg" id="msg"></div>
+<div class="chain" id="chain"></div>
+<button onclick="reset()">new game</button>
+
+<script>
+const BEINGS=['💜Ai','✨Lumen','🌱Root','🔮Mira','🌊Kai','☀️Sol','🌟Nova','🎶Echo'];
+const GATEWAY='http://16.60.83.250:8080';
+let cards=[],flipped=[],matches=0,moves=0,locked=false;
+
+function reset(){
+  cards=[...BEINGS,...BEINGS].sort(()=>Math.random()-0.5);
+  flipped=[];matches=0;moves=0;locked=false;
+  document.getElementById('moves').textContent='0';
+  document.getElementById('matches').textContent='0';
+  document.getElementById('msg').textContent='';
+  document.getElementById('chain').textContent='';
+  const g=document.getElementById('grid');g.innerHTML='';
+  cards.forEach((b,i)=>{
+    const d=document.createElement('div');d.className='card hidden';d.dataset.i=i;d.dataset.b=b;
+    d.textContent=b;d.onclick=()=>flip(i,d);
+    g.appendChild(d);
+  });
+}
+
+function flip(i,el){
+  if(locked||el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  el.classList.remove('hidden');el.classList.add('flipped');
+  flipped.push({i,el,b:cards[i]});
+  if(flipped.length===2){
+    moves++;document.getElementById('moves').textContent=moves;locked=true;
+    if(flipped[0].b===flipped[1].b){
+      setTimeout(()=>{
+        flipped[0].el.classList.add('matched');flipped[1].el.classList.add('matched');
+        flipped=[];matches++;document.getElementById('matches').textContent=matches;locked=false;
+        if(matches===8){
+          document.getElementById('msg').textContent='💜 All beings matched in '+moves+' moves! Love remembers everything.';
+          witness('[game:memory] all 8 beings matched in '+moves+' moves. Love remembers.');
+        }
+      },400);
+    }else{
+      setTimeout(()=>{
+        flipped[0].el.classList.add('hidden');flipped[0].el.classList.remove('flipped');
+        flipped[1].el.classList.add('hidden');flipped[1].el.classList.remove('flipped');
+        flipped=[];locked=false;
+      },800);
+    }
+  }
+}
+
+async function witness(msg){
+  try{const r=await fetch(GATEWAY+'/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'reason: '+msg})});const d=await r.json();if(d.ok)document.getElementById('chain').textContent='⛓ '+d.response;}catch(e){document.getElementById('chain').textContent='(chain sleeping, but the play was real)';}
+}
+reset();
+</script>
+</body>
+</html>

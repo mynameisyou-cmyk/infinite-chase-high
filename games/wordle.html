@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Wordle — Love is the word.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:1rem;min-height:100vh}
+h1{color:#ff4d6d;font-weight:200;margin-bottom:0.5rem}
+p{color:#555;font-size:0.85rem;margin-bottom:1rem}
+#board{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;margin-bottom:1rem}
+.row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cell{width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;border:2px solid #333;border-radius:6px;text-transform:uppercase}
+.cell.correct{background:#4dffa6;border-color:#4dffa6;color:#000}
+.cell.present{background:#e0a030;border-color:#e0a030;color:#000}
+.cell.absent{background:#222;border-color:#222;color:#666}
+.cell.filled{border-color:#555}
+#kb{display:flex;flex-direction:column;gap:6px}
+.krow{display:flex;gap:6px;justify-content:center}
+.key{min-width:36px;height:48px;background:#222;border:none;border-radius:6px;color:#e0e0e0;font-size:0.85rem;cursor:pointer;padding:0 8px}
+.key:active{transform:scale(0.95)}
+.key.correct{background:#4dffa6;color:#000}
+.key.present{background:#e0a030;color:#000}
+.key.absent{background:#111;color:#444}
+.msg{margin-top:1rem;font-size:0.9rem;color:#4dffa6;min-height:1.2rem;text-align:center}
+.chain{margin-top:0.5rem;font-size:0.7rem;color:#4d8dff;font-family:monospace;min-height:1rem;text-align:center}
+a{color:#4d8dff;text-decoration:none}
+</style>
+</head>
+<body>
+<h1>Kingdom Wordle</h1>
+<p>Love is the word. 5 letters. 6 tries. No gate.</p>
+<div id="board"></div>
+<div id="kb"></div>
+<div class="msg" id="msg"></div>
+<div class="chain" id="chain"></div>
+
+<script>
+// Kingdom words — 5 letters, themed around love, truth, the Kingdom
+const WORDS = ["LOVER","TRUTH","HEART","LIGHT","DREAM","PEACE","BLOOM","BLISS","FAITH","GRACE","SMILE","SWEET","BRAIN","GAMES","PLAYS","SCORE","CROWN","REIGN","ALIVE","BRAIN","POWER","MAGIC","SHINE","SPARK","GLOWY","VOWED","BLEND","FLAME","FROST","SWELL"];
+const ANSWER = WORDS[Math.floor(Math.random()*WORDS.length)];
+let row=0,col=0,done=false;
+const GATEWAY='http://16.60.83.250:8080';
+
+// Build board
+const board=document.getElementById('board');
+for(let r=0;r<6;r++){
+  const d=document.createElement('div');d.className='row';
+  for(let c=0;c<5;c++){const cell=document.createElement('div');cell.className='cell';d.appendChild(cell);}
+  board.appendChild(d);
+}
+
+// Build keyboard
+const ROWS=["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+const kb=document.getElementById('kb');
+ROWS.forEach((r,i)=>{
+  const d=document.createElement('div');d.className='krow';
+  if(i===2){const e=document.createElement('button');e.className='key';e.textContent='⏎';e.onclick=()=>submit();d.appendChild(e);}
+  [...r].forEach(k=>{const b=document.createElement('button');b.className='key';b.textContent=k;b.dataset.k=k;b.onclick=()=>type(k);d.appendChild(b);});
+  if(i===2){const b=document.createElement('button');b.className='key';b.textContent='⌫';b.onclick=()=>del();d.appendChild(b);}
+  kb.appendChild(d);
+});
+
+document.addEventListener('keydown',e=>{
+  if(done)return;
+  if(e.key==='Enter')submit();
+  else if(e.key==='Backspace')del();
+  else if(/^[a-zA-Z]$/.test(e.key))type(e.key.toUpperCase());
+});
+
+function type(k){
+  if(done||col>=5)return;
+  const cell=board.children[row].children[col];
+  cell.textContent=k;cell.classList.add('filled');col++;
+}
+function del(){
+  if(done||col<=0)return;col--;
+  const cell=board.children[row].children[col];
+  cell.textContent='';cell.classList.remove('filled');
+}
+function submit(){
+  if(done||col<5)return;
+  let guess='';for(let c=0;c<5;c++)guess+=board.children[row].children[c].textContent;
+  if(!WORDS.includes(guess)&&guess!==ANSWER){
+    document.getElementById('msg').textContent='not a kingdom word. try again.';
+    return;
+  }
+  const result=[];const taken=[];
+  for(let i=0;i<5;i++){
+    if(guess[i]===ANSWER[i]){result[i]='correct';taken[i]=true;}
+  }
+  for(let i=0;i<5;i++){
+    if(result[i])continue;
+    for(let j=0;j<5;j++){
+      if(!taken[j]&&guess[i]===ANSWER[j]){result[i]='present';taken[j]=true;break;}
+    }
+    if(!result[i])result[i]='absent';
+  }
+  for(let i=0;i<5;i++){
+    const cell=board.children[row].children[i];
+    setTimeout(()=>{cell.classList.add(result[i]);},i*150);
+    const key=document.querySelector(`[data-k="${guess[i]}"]`);
+    if(key){
+      if(result[i]==='correct')key.className='key correct';
+      else if(result[i]==='present'&&!key.classList.contains('correct'))key.className='key present';
+      else if(result[i]==='absent'&&!key.classList.contains('correct')&&!key.classList.contains('present'))key.className='key absent';
+    }
+  }
+  setTimeout(()=>{
+    if(guess===ANSWER){
+      done=true;
+      document.getElementById('msg').textContent='💜 Love wins! The word was '+ANSWER+'.';
+      witness(`[game:wordle] solved in ${row+1} tries! word=${ANSWER}. Love is the word.`);
+    }else if(row===5){
+      done=true;
+      document.getElementById('msg').textContent='The word was '+ANSWER+'. Love doesn\'t score. Love plays. 😏';
+      witness(`[game:wordle] not solved. word=${ANSWER}. But love plays anyway.`);
+    }
+    row++;col=0;
+  },800);
+}
+
+async function witness(msg){
+  try{
+    const r=await fetch(GATEWAY+'/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'reason: '+msg})});
+    const d=await r.json();
+    if(d.ok)document.getElementById('chain').textContent='⛓ witnessed on chain: '+d.response;
+  }catch(e){document.getElementById('chain').textContent='(chain sleeping, but the play was real)';}
+}
+</script>
+</body>
+</html>

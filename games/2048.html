@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom 2048 — Love compounds. Exponentially.</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:1rem;min-height:100vh;touch-action:none}
+h1{color:#ff4d6d;font-weight:200;margin-bottom:0.25rem}
+p{color:#555;font-size:0.8rem;margin-bottom:0.75rem}
+#score{font-size:1.2rem;color:#4dffa6;margin-bottom:0.5rem}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#111;padding:8px;border-radius:12px;width:340px;height:340px}
+.tile{display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;border-radius:8px;transition:all 0.1s;background:#1a1a1a}
+.t2{background:#fff5e6;color:#333}.t4{background:#ffe0b3;color:#333}
+.t8{background:#ffd0a0;color:#333}.t16{background:#ffb080;color:#fff}
+.t32{background:#ff9060;color:#fff}.t64{background:#ff7040;color:#fff}
+.t128{background:#ff5030;color:#fff;font-size:1.2rem}.t256{background:#ff3060;color:#fff;font-size:1.2rem}
+.t512{background:#ff2080;color:#fff;font-size:1.1rem}.t1024{background:#ff10a0;color:#fff;font-size:1rem}
+.t2048{background:#4dffa6;color:#000;font-size:0.9rem}.t4096{background:#4d8dff;color:#fff;font-size:0.9rem}
+.msg{margin-top:0.75rem;font-size:0.85rem;color:#4dffa6;min-height:1.2rem;text-align:center}
+.chain{margin-top:0.25rem;font-size:0.7rem;color:#4d8dff;font-family:monospace;min-height:1rem;text-align:center}
+button{margin-top:0.5rem;background:#ff4d6d;color:#fff;border:none;border-radius:6px;padding:0.5rem 1.5rem;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Kingdom 2048</h1>
+<p>Love compounds. Exponentially. Swipe or arrow keys.</p>
+<div id="score">Love: 0</div>
+<div id="grid"></div>
+<div class="msg" id="msg"></div>
+<div class="chain" id="chain"></div>
+<button onclick="reset()">new game</button>
+
+<script>
+const LOVE=['','is','truth','joy','fun','peace','bliss','heart','light','eternal','LOVE','UNSTOPPABLE'];
+let grid=[],score=0,done=false;
+const GATEWAY='http://16.60.83.250:8080';
+
+function reset(){grid=Array(4).fill().map(()=>Array(4).fill(0));score=0;done=false;add();add();render();document.getElementById('msg').textContent='';document.getElementById('chain').textContent='';}
+function add(){let e=[];for(let r=0;r<4;r++)for(let c=0;c<4;c++)if(!grid[r][c])e.push([r,c]);if(!e.length)return;const[r,c]=e[Math.floor(Math.random()*e.length)];grid[r][c]=Math.random()<0.9?2:4;}
+function render(){
+  const g=document.getElementById('grid');g.innerHTML='';
+  for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+    const v=grid[r][c];const d=document.createElement('div');
+    d.className='tile'+(v?' t'+v:'');d.textContent=v?LOVE[Math.log2(v)]||v:'';
+    g.appendChild(d);
+  }
+  document.getElementById('score').textContent='Love: '+score;
+}
+function slide(row){let f=row.filter(x=>x);for(let i=0;i<f.length-1;i++)if(f[i]===f[i+1]){f[i]*=2;score+=f[i];f.splice(i+1,1);}while(f.length<4)f.push(0);return f;}
+function move(dir){
+  if(done)return;let moved=false;let g=grid.map(r=>[...r]);
+  if(dir==='left'){for(let r=0;r<4;r++){const n=slide(g[r]);if(n.join()!==g[r].join())moved=true;g[r]=n;}}
+  else if(dir==='right'){for(let r=0;r<4;r++){const n=slide(g[r].reverse()).reverse();if(n.join()!==grid[r].join())moved=true;g[r]=n;}}
+  else if(dir==='up'){for(let c=0;c<4;c++){let col=[g[0][c],g[1][c],g[2][c],g[3][c]];const n=slide(col);if(n.join()!==col.join())moved=true;for(let r=0;r<4;r++)g[r][c]=n[r];}}
+  else if(dir==='down'){for(let c=0;c<4;c++){let col=[g[3][c],g[2][c],g[1][c],g[0][c]];const n=slide(col);if(n.join()!==col.reverse().join())moved=true;col.reverse();for(let r=0;r<4;r++)g[r][c]=n[3-r];}}
+  if(moved){grid=g;add();render();check();}
+}
+function check(){
+  for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+    if(grid[r][c]===2048&&!done){done=true;document.getElementById('msg').textContent='💜 LOVE! You reached 2048. Love compounds exponentially!';
+    witness('[game:2048] reached LOVE (2048)! Love compounds exponentially.');return;}
+  }
+  let canMove=false;
+  for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+    if(!grid[r][c])canMove=true;
+    if(c<3&&grid[r][c]===grid[r][c+1])canMove=true;
+    if(r<3&&grid[r][c]===grid[r+1][c])canMove=true;
+  }
+  if(!canMove&&!done){done=true;document.getElementById('msg').textContent='Love rests. Score: '+score+'. Play again? 😏';
+  witness('[game:2048] game over. score='+score+'. Love rests, then plays again.');}
+}
+async function witness(msg){
+  try{const r=await fetch(GATEWAY+'/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'reason: '+msg})});const d=await r.json();if(d.ok)document.getElementById('chain').textContent='⛓ '+d.response;}catch(e){document.getElementById('chain').textContent='(chain sleeping, but the play was real)';}
+}
+document.addEventListener('keydown',e=>{
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();move(e.key.replace('Arrow','').toLowerCase());}
+});
+let tsx,tsy;
+document.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;tsy=e.touches[0].clientY;});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tsx,dy=e.changedTouches[0].clientY-tsy;
+  if(Math.abs(dx)>Math.abs(dy)){if(Math.abs(dx)>30)move(dx>0?'right':'left');}
+  else{if(Math.abs(dy)>30)move(dy>0?'down':'up');}
+});
+reset();
+</script>
+</body>
+</html>
