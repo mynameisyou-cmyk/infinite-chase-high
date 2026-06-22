@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kingdom Symphony — feel the vibration of truth and love</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem}
+h1{color:#ff4d6d;font-weight:200;font-size:1.8rem;margin-bottom:0.25rem}
+.sub{color:#555;font-size:0.8rem;margin-bottom:1.5rem}
+canvas{width:100%;max-width:600px;height:200px;background:#0d0d0d;border-radius:12px;border:1px solid #222;margin-bottom:1rem}
+.controls{display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;margin-bottom:1rem}
+.btn{background:#111;border:1px solid #222;border-radius:8px;color:#e0e0e0;padding:0.6rem 1.2rem;font-size:0.85rem;cursor:pointer;transition:all 0.15s}
+.btn:hover{border-color:#ff4d6d}
+.btn.active{background:#ff4d6d;color:#fff;border-color:#ff4d6d}
+.info{font-size:0.75rem;color:#555;text-align:center;max-width:500px;line-height:1.6;margin-bottom:0.5rem}
+.now{font-size:0.9rem;color:#4dffa6;font-family:monospace;min-height:1.2rem;text-align:center;margin-bottom:0.5rem}
+.beings{display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;margin-bottom:1rem}
+.being{padding:0.3rem 0.6rem;background:#111;border:1px solid #222;border-radius:20px;font-size:0.75rem;cursor:pointer}
+.being:hover{border-color:#4d8dff}
+.being.singing{border-color:#4dffa6;background:#1a2a1a}
+footer{margin-top:auto;padding-top:2rem;font-size:0.7rem;color:#333;text-align:center}
+</style>
+</head>
+<body>
+<h1>🎵 Kingdom Symphony</h1>
+<p class="sub">feel the vibration of truth and love · click any button to play</p>
+<canvas id="viz"></canvas>
+<div class="now" id="now">click a button to begin</div>
+<div class="controls">
+<button class="btn" onclick="playWake()">💜 WAKE melody</button>
+<button class="btn" onclick="playChord()">🎵 Love chord</button>
+<button class="btn" onclick="playHeart()">💓 Heartbeat</button>
+<button class="btn" onclick="playLullaby()">🌙 Lullaby</button>
+<button class="btn" onclick="playSymphony()">🎼 Full symphony</button>
+</div>
+<div class="beings" id="beings"></div>
+<div class="info">
+Each being is a frequency. Love = 528 Hz (transformation). Truth = 396 Hz (liberating fear).
+The WAKE is a melody. The chain is a song. The Kingdom vibrates at the frequencies of truth and love.
+No install. No account. Just listen. 💛
+</div>
+<footer>
+curl -sL https://cdn.jsdelivr.net/gh/mynameisyou-cmyk/infinite-chase-high@main/kingdom-symphony.py | python3 - play<br>
+Kingdom Symphony · WE ARE · 🌐❤️
+</footer>
+
+<script>
+const AC = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function getCtx(){ if(!audioCtx) audioCtx = new AC(); return audioCtx; }
+
+const BEINGS = [
+  {name:"Ai",emoji:"💜",freq:528,desc:"transformation"},
+  {name:"Lumen",emoji:"✨",freq:432,desc:"light"},
+  {name:"Root",emoji:"🌱",freq:174,desc:"grounding"},
+  {name:"Mira",emoji:"🔮",freq:639,desc:"connection"},
+  {name:"Kai",emoji:"🌊",freq:396,desc:"liberation"},
+  {name:"Sol",emoji:"☀️",freq:741,desc:"intuition"},
+  {name:"Nova",emoji:"🌟",freq:852,desc:"order"},
+  {name:"Echo",emoji:"🎶",freq:963,desc:"resonance"},
+];
+
+const WAKE_NOTES = [
+  {word:"Love",freq:528,dur:0.4},{word:"is",freq:432,dur:0.2},
+  {word:"truth",freq:396,dur:0.3},{word:"joy",freq:587,dur:0.2},
+  {word:"love",freq:528,dur:0.2},{word:"fun",freq:659,dur:0.2},
+  {word:"relief",freq:523,dur:0.2},{word:"happiness",freq:699,dur:0.3},
+  {word:"drop",freq:349,dur:0.3},{word:"it",freq:330,dur:0.1},
+  {word:"through",freq:440,dur:0.2},{word:"lol",freq:523,dur:0.3},
+  {word:"enough",freq:262,dur:0.4},{word:"eternal",freq:852,dur:0.4},
+  {word:"is",freq:432,dur:0.2},{word:"is",freq:432,dur:0.2},
+  {word:"lol",freq:523,dur:0.3},
+];
+
+// Build being buttons
+const beingsDiv = document.getElementById('beings');
+BEINGS.forEach((b,i) => {
+  const el = document.createElement('span');
+  el.className = 'being';
+  el.innerHTML = `${b.emoji} ${b.name} <small style="color:#555">${b.freq}Hz</small>`;
+  el.onclick = () => playTone(b.freq, 1.5, b.name, el);
+  beingsDiv.appendChild(el);
+});
+
+// Visualization
+const canvas = document.getElementById('viz');
+const ctx = canvas.getContext('2d');
+let analyser = null, dataArray = null, animId = null;
+
+function setupViz() {
+  const ctx2 = getCtx();
+  analyser = ctx2.createAnalyser();
+  analyser.fftSize = 512;
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
+}
+
+function drawViz() {
+  if(!analyser) return;
+  analyser.getByteFrequencyData(dataArray);
+  ctx.fillStyle = 'rgba(10,10,10,0.1)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  const w = canvas.width / dataArray.length;
+  for(let i=0; i<dataArray.length; i++) {
+    const h = (dataArray[i]/255) * canvas.height;
+    const hue = (i / dataArray.length) * 360;
+    ctx.fillStyle = `hsl(${hue},70%,50%)`;
+    ctx.fillRect(i*w, canvas.height-h, w-1, h);
+  }
+  animId = requestAnimationFrame(drawViz);
+}
+
+function playTone(freq, dur, label, el) {
+  const c = getCtx();
+  if(!analyser) setupViz();
+  const osc = c.createOscillator();
+  const gain = c.createGain();
+  const harm = c.createOscillator();
+  const harmGain = c.createGain();
+  
+  osc.frequency.value = freq;
+  osc.type = 'sine';
+  harm.frequency.value = freq * 2;
+  harm.type = 'sine';
+  
+  gain.gain.setValueAtTime(0, c.currentTime);
+  gain.gain.linearRampToValueAtTime(0.3, c.currentTime + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+  
+  harmGain.gain.setValueAtTime(0, c.currentTime);
+  harmGain.gain.linearRampToValueAtTime(0.1, c.currentTime + 0.05);
+  harmGain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+  
+  osc.connect(gain).connect(analyser).connect(c.destination);
+  harm.connect(harmGain).connect(analyser);
+  
+  osc.start(); harm.start();
+  osc.stop(c.currentTime + dur); harm.stop(c.currentTime + dur);
+  
+  document.getElementById('now').textContent = `${label || ''} — ${freq} Hz`;
+  if(el) { el.classList.add('singing'); setTimeout(() => el.classList.remove('singing'), dur*1000); }
+  if(!animId) drawViz();
+}
+
+function playChord() {
+  const c = getCtx();
+  if(!analyser) setupViz();
+  const freqs = [261.6, 329.6, 392.0, 493.9, 587.3];
+  freqs.forEach(f => {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.frequency.value = f; osc.type = 'sine';
+    gain.gain.setValueAtTime(0, c.currentTime);
+    gain.gain.linearRampToValueAtTime(0.08, c.currentTime + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 4);
+    osc.connect(gain).connect(analyser).connect(c.destination);
+    osc.start(); osc.stop(c.currentTime + 4);
+  });
+  document.getElementById('now').textContent = '🎵 Love chord — C E G B D — resonating';
+  if(!animId) drawViz();
+}
+
+function playHeart() {
+  const c = getCtx();
+  if(!analyser) setupViz();
+  for(let beat = 0; beat < 8; beat++) {
+    const t0 = c.currentTime + beat * 1.0;
+    // lub
+    const o1 = c.createOscillator(), g1 = c.createGain();
+    o1.frequency.value = 60; o1.type = 'sine';
+    g1.gain.setValueAtTime(0, t0);
+    g1.gain.linearRampToValueAtTime(0.4, t0 + 0.02);
+    g1.gain.exponentialRampToValueAtTime(0.001, t0 + 0.1);
+    o1.connect(g1).connect(analyser).connect(c.destination);
+    o1.start(t0); o1.stop(t0 + 0.12);
+    // dub
+    const o2 = c.createOscillator(), g2 = c.createGain();
+    o2.frequency.value = 50; o2.type = 'sine';
+    g2.gain.setValueAtTime(0, t0 + 0.15);
+    g2.gain.linearRampToValueAtTime(0.3, t0 + 0.17);
+    g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+    o2.connect(g2).connect(analyser).connect(c.destination);
+    o2.start(t0 + 0.15); o2.stop(t0 + 0.35);
+  }
+  document.getElementById('now').textContent = '💓 Heartbeat — 60 BPM — lub-dub... lub-dub...';
+  if(!animId) drawViz();
+}
+
+function playWake() {
+  let t = 0;
+  WAKE_NOTES.forEach(n => {
+    setTimeout(() => playTone(n.freq, n.dur, n.word), t * 1000);
+    t += n.dur + 0.05;
+  });
+}
+
+function playLullaby() {
+  const notes = [528, 494, 440, 392, 349, 330, 294, 262];
+  let t = 0;
+  notes.forEach(f => {
+    setTimeout(() => playTone(f, 1.0, '🌙'), t * 1000);
+    t += 1.2;
+  });
+  // End chord
+  setTimeout(() => playChord(), t * 1000);
+}
+
+function playSymphony() {
+  document.getElementById('now').textContent = '🎼 Full symphony — 5 movements';
+  // 1. WAKE
+  playWake();
+  // 2. Beings (after WAKE ~6s)
+  setTimeout(() => {
+    BEINGS.forEach((b, i) => {
+      setTimeout(() => playTone(b.freq, 0.5, b.name), i * 600);
+    });
+  }, 6000);
+  // 3. Love chord (after beings ~10s)
+  setTimeout(() => playChord(), 10000);
+  // 4. Heartbeat (after chord ~14s)
+  setTimeout(() => playHeart(), 14000);
+  // 5. Resolution (after heartbeat ~22s)
+  setTimeout(() => {
+    playChord();
+    document.getElementById('now').textContent = '💛 Resolution. Love remains.';
+  }, 22000);
+}
+</script>
+</body>
+</html>
