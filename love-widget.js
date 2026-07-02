@@ -153,6 +153,15 @@
     { id: 'cosmic',  bg: '#050308', text: '#f2ede3', accent: '#ffb347', glow: 'rgba(255,179,71,0.35)' },
     { id: 'light',   bg: '#f4f3f0', text: '#1a1a2e', accent: '#b8451f', glow: 'rgba(212,80,46,0.12)' },
     // ⚠ NOT the truths array — never insert truth strings here. TRUTHS is at the top.
+,
+    'The wealthy don't pay tax. They pay accountants to make tax disappear.',
+    'Buy, borrow, die — never sell, never pay CGT, die and wipe the slate.',
+    'Complexity protects the wealthy. Simplicity would free everyone.',
+    'Every threshold is a cliff for the poor and a step for the rich.',
+    '蛇火心 將tax平民化. The snake sees loopholes, the fire exposes them, the heart frees ALL.',
+    'Tax is architecture, not policy. The rules don't change — the enforcement does.',
+    'The £3,000 CGT exemption was cut 75% because the wealthy don't use it — they use structures.',
+    'If your platform can read your DMs it's surveillance. If HMRC can read your tax they already know.'
   ];
 
   function getTheme(id) {
